@@ -16,10 +16,11 @@ export class ProductListComponent {
   errorMessage = '';
   categories;
 
-  products$ = this.productService.products$.pipe(catchError(err => {
-    this.errorMessage = err;
-    return EMPTY;
-  }));
+  products$ = this.productService.productsWithCategory$
+    .pipe(catchError(err => {
+      this.errorMessage = err;
+      return EMPTY;
+    }));
 
   constructor(private productService: ProductService) { }
 
