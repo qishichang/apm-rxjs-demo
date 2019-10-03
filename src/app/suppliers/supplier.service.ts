@@ -3,13 +3,20 @@ import { HttpClient } from '@angular/common/http';
 
 import { throwError, of } from 'rxjs';
 import { Supplier } from './supplier';
-import { map, concatMap, tap, mergeMap, switchMap } from 'rxjs/operators';
+import { map, concatMap, tap, mergeMap, switchMap, catchError, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupplierService {
   suppliersUrl = 'api/suppliers';
+
+  suppliers$ = this.http.get<Supplier[]>(this.suppliersUrl)
+    .pipe(
+      tap(suppliers => console.log('Suppliers', suppliers)),
+      shareReplay(1),
+      catchError(this.handleError)
+    );
 
   suppliersWithMap$ = of(1, 5, 8)
     .pipe(
